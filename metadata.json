@@ -1,0 +1,6 @@
+{
+  "name": "EmoteSplitter",
+  "description": "An AI-powered utility to automatically slice emoticon grids and sprite sheets into individual high-quality files.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
