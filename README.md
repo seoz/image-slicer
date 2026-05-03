@@ -1,20 +1,33 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# ✂️ Image Slicer
 
-# Run and deploy your AI Studio app
+**Image Slicer** is a professional-grade utility designed to effortlessly decompose emoticon grids, sprite sheets, and icon collections into individual high-quality assets. It combines cutting-edge AI detection with precise manual layout tools to streamline your creative workflow.
 
-This contains everything you need to run your app locally.
+![Image Slicer Interface Overview](screenshot_1.png)
 
-View your app in AI Studio: https://ai.studio/apps/7ed1e564-c0ea-4db3-9050-3676c0609978
+## 🚀 Key Features
 
-## Run Locally
+-   **🤖 AI-Powered Auto-Slicing**: Use the "AI Boost" mode to automatically detect objects within an image. It identifies bounding boxes and even extracts text from the image to automatically name your files (e.g., "smile.png", "heart.png").
+-   **📏 Precision Grid Controls**: For perfectly uniform sprite sheets, switch to manual mode to define rows, columns, offsets, and item gaps with pixel-perfect accuracy.
+-   **🖱️ Custom Drag-and-Crop**: Need to grab specific areas? Add manual crop boxes, then drag and resize them directly on the canvas.
+-   **🔍 Infinite Viewport Control**: Zoom in up to 500% to inspect fine details or use the "Fit" button to get an instant overview of your project.
+-   **📦 Batch Results & Export**: Preview extracted assets in real-time in the results sidebar and download individual slices instantly.
 
-**Prerequisites:**  Node.js
+## 🛠️ How it Works
 
+1.  **Upload**: Drop in your image (PNG, JPG, or WebP).
+2.  **Detect**: Choose between **AI Detection** for irregular layouts or **Manual Grid** for structured sheets.
+3.  **Refine**: Adjust offsets, gaps, or manually tweak the bounding boxes.
+4.  **Extract**: Preview your slices and export them as high-quality individual files.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+![Slicing Process Example](screenshot_2.png)
+
+## 🎨 Tech Stack
+
+-   **React + Vite**: For a lightning-fast, reactive interface.
+-   **Tailwind CSS**: For a sleek, professional "Dark Mode" aesthetic.
+-   **Framer Motion**: Smooth animations and interactive drag-and-resize capabilities.
+-   **Gemini Vision API**: Intelligent object detection and text-recognition for automatic file naming.
+
+---
+
+**Made by Daniel Seo**
