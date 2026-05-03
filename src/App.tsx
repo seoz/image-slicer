@@ -17,7 +17,8 @@ import {
   X,
   Plus,
   Minus,
-  Settings2
+  Settings2,
+  Keyboard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import JSZip from 'jszip';
@@ -491,6 +492,23 @@ export default function App() {
                 </div>
               </div>
 
+              {!useManualGrid && (
+                <div className="space-y-4 p-4 rounded-xl bg-orange-500/5 border border-orange-500/20">
+                  <div className="flex items-center gap-2">
+                    <Keyboard className="w-4 h-4 text-orange-500" />
+                    <h2 className="text-xs font-semibold uppercase tracking-widest text-white/80">Shortcuts</h2>
+                  </div>
+                  <div className="space-y-2">
+                    <ShortcutItem keys={['Arrows']} label="Move" />
+                    <ShortcutItem keys={['Shift', 'Arrows']} label="Move Fast" />
+                    <ShortcutItem keys={['Alt', 'Arrows']} label="Resize" />
+                    <ShortcutItem keys={['Alt', 'Shift', 'Arrows']} label="Resize Fast" />
+                    <ShortcutItem keys={['Delete']} label="Remove" />
+                    <ShortcutItem keys={['Esc']} label="Deselect" />
+                  </div>
+                </div>
+              )}
+
               <div className={`space-y-6 transition-opacity ${!useManualGrid ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
                 <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                   <Grid3X3 className="w-4 h-4 text-orange-500" />
@@ -803,6 +821,21 @@ function ConfigInput({ label, value, onChange }: { label: string; value: number;
         onChange={(e) => onChange(e.target.value)}
         className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-500 focus:bg-white/10 transition-all text-center"
       />
+    </div>
+  );
+}
+
+function ShortcutItem({ keys, label }: { keys: string[], label: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[10px] text-white/40 font-medium">{label}</span>
+      <div className="flex gap-1">
+        {keys.map(k => (
+          <kbd key={k} className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-[9px] font-mono text-white/60 min-w-[20px] text-center">
+            {k}
+          </kbd>
+        ))}
+      </div>
     </div>
   );
 }
