@@ -493,17 +493,18 @@ export default function App() {
         </aside>
 
         {/* Center - Preview */}
-        <section className="flex-1 bg-[#050505] overflow-auto flex items-center justify-center p-12 relative" ref={containerRef}>
-          <AnimatePresence mode="wait">
-            {!image ? (
-              <MotionDiv 
-                key="upload-zone"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                {...getRootProps()}
-                className={`w-full max-w-2xl h-96 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center p-12 transition-all cursor-pointer bg-white/5 ${isDragActive ? 'border-orange-500 bg-orange-500/5' : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'}`}
-              >
+        <section className="flex-1 bg-[#050505] overflow-auto relative" ref={containerRef}>
+          <div className="min-h-full flex min-w-full p-12">
+            <AnimatePresence mode="wait">
+              {!image ? (
+                <MotionDiv 
+                  key="upload-zone"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  {...getRootProps()}
+                  className={`m-auto w-full max-w-2xl h-96 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center p-12 transition-all cursor-pointer bg-white/5 ${isDragActive ? 'border-orange-500 bg-orange-500/5' : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'}`}
+                >
                 <input {...getInputProps()} />
                 <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mb-6">
                   <Upload className="w-8 h-8 text-white/60" />
@@ -513,20 +514,14 @@ export default function App() {
               </MotionDiv>
             ) : (
               <div 
-                className="flex items-center justify-center min-h-full min-w-full"
+                className="m-auto relative"
                 style={{ 
-                  padding: '40px',
+                  width: image.width * previewScale, 
+                  height: image.height * previewScale,
+                  transition: 'width 0.2s, height 0.2s',
+                  flexShrink: 0
                 }}
               >
-                <div 
-                  style={{ 
-                    width: image.width * previewScale, 
-                    height: image.height * previewScale,
-                    transition: 'width 0.2s, height 0.2s',
-                    position: 'relative',
-                    flexShrink: 0
-                  }}
-                >
                   <MotionDiv 
                     key="preview-zone"
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -623,9 +618,9 @@ export default function App() {
                     )}
                   </MotionDiv>
                 </div>
-              </div>
             )}
           </AnimatePresence>
+        </div>
           
           {image && (
             <MotionDiv 
