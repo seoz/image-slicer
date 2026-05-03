@@ -68,6 +68,7 @@ export default function App() {
     verticalGap: 0,
   });
   const [detectedBoxes, setDetectedBoxes] = useState<EmoteBox[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [useManualGrid, setUseManualGrid] = useState(true);
   const [dragState, setDragState] = useState<{
     index: number;
@@ -98,6 +99,7 @@ export default function App() {
           });
           setSlices([]);
           setDetectedBoxes([]);
+          setSelectedIndex(null);
           setUseManualGrid(true);
         };
         img.src = e.target?.result as string;
@@ -162,6 +164,7 @@ export default function App() {
       const result = JSON.parse(response.text || '[]');
       if (Array.isArray(result) && result.length > 0) {
         setDetectedBoxes(result);
+        setSelectedIndex(null);
         setUseManualGrid(false);
       }
     } catch (error) {
@@ -261,6 +264,7 @@ export default function App() {
 
   const handleBoxInteraction = (index: number, e: React.MouseEvent, handle?: string) => {
     e.stopPropagation();
+    setSelectedIndex(index);
     setDragState({
       index,
       handle,
@@ -269,6 +273,56 @@ export default function App() {
       initialBox: { ...detectedBoxes[index] }
     });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedIndex === null || useManualGrid) return;
+      
+      // Don't interfere with typing if an input is focused
+      if (document.activeElement?.tagName === 'INPUT') return;
+
+      const step = e.shiftKey ? 10 : 1;
+      const box = { ...detectedBoxes[selectedIndex] };
+      let changed = false;
+
+      if (e.key === 'ArrowUp') {
+        if (e.altKey) box.height = Math.max(1, box.height - step);
+        else box.y = Math.max(0, box.y - step);
+        changed = true;
+      } else if (e.key === 'ArrowDown') {
+        if (e.altKey) box.height = box.height + step;
+        else box.y = Math.min((image?.height || 0) - box.height, box.y + step);
+        changed = true;
+      } else if (e.key === 'ArrowLeft') {
+        if (e.altKey) box.width = Math.max(1, box.width - step);
+        else box.x = Math.max(0, box.x - step);
+        changed = true;
+      } else if (e.key === 'ArrowRight') {
+        if (e.altKey) box.width = box.width + step;
+        else box.x = Math.min((image?.width || 0) - box.width, box.x + step);
+        changed = true;
+      } else if (e.key === 'Delete' || e.key === 'Backspace') {
+        deleteBox(selectedIndex);
+        setSelectedIndex(null);
+        return;
+      } else if (e.key === 'Escape') {
+        setSelectedIndex(null);
+        return;
+      }
+
+      if (changed) {
+        e.preventDefault();
+        setDetectedBoxes(prev => {
+          const next = [...prev];
+          next[selectedIndex] = box;
+          return next;
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIndex, detectedBoxes, useManualGrid, image]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -411,7 +465,7 @@ export default function App() {
                 <div className="space-y-2 mt-2">
                   {!useManualGrid && (
                     <button 
-                      onClick={() => setUseManualGrid(true)}
+                      onClick={() => { setUseManualGrid(true); setSelectedIndex(null); }}
                       className="w-full text-[10px] uppercase tracking-widest text-white/40 hover:text-white transition-colors text-center"
                     >
                       Switch back to manual grid
@@ -493,7 +547,11 @@ export default function App() {
         </aside>
 
         {/* Center - Preview */}
-        <section className="flex-1 bg-[#050505] overflow-auto relative" ref={containerRef}>
+        <section 
+          className="flex-1 bg-[#050505] overflow-auto relative" 
+          ref={containerRef}
+          onClick={() => setSelectedIndex(null)}
+        >
           <div className="min-h-full flex min-w-full p-12">
             <AnimatePresence mode="wait">
               {!image ? (
@@ -574,7 +632,8 @@ export default function App() {
                           <div 
                             key={i}
                             onMouseDown={(e) => handleBoxInteraction(i, e)}
-                            className={`absolute border transition-all flex items-center justify-center group pointer-events-auto cursor-move ${dragState?.index === i ? 'border-orange-500 bg-orange-500/20 z-10' : 'border-cyan-400/60 bg-cyan-400/10 hover:border-orange-500/60 hover:bg-orange-500/10'}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className={`absolute border transition-all flex items-center justify-center group pointer-events-auto cursor-move ${selectedIndex === i ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/20 z-10' : 'border-cyan-400/60 bg-cyan-400/10 hover:border-orange-500/60 hover:bg-orange-500/10'}`}
                             style={{
                               left: `${box.x}px`,
                               top: `${box.y}px`,
@@ -589,8 +648,8 @@ export default function App() {
                             
                             {/* Delete Button */}
                             <button 
-                              onClick={(e) => { e.stopPropagation(); deleteBox(i); }}
-                              className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                              onClick={(e) => { e.stopPropagation(); deleteBox(i); setSelectedIndex(null); }}
+                              className={`absolute -top-2 -right-2 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center transition-opacity z-20 ${selectedIndex === i ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -600,7 +659,8 @@ export default function App() {
                               <div 
                                 key={h}
                                 onMouseDown={(e) => handleBoxInteraction(i, e, h)}
-                                className={`absolute w-2 h-2 bg-white border border-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity ${
+                                onClick={(e) => e.stopPropagation()}
+                                className={`absolute w-2 h-2 bg-white border border-orange-500 rounded-full transition-opacity ${selectedIndex === i ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} ${
                                   h === 'tl' ? '-top-1 -left-1 cursor-nw-resize' :
                                   h === 'tr' ? '-top-1 -right-1 cursor-ne-resize' :
                                   h === 'bl' ? '-bottom-1 -left-1 cursor-sw-resize' :
