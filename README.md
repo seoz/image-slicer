@@ -2,7 +2,7 @@
 
 **Image Slicer** is a professional-grade utility designed to effortlessly decompose emoticon grids, sprite sheets, and icon collections into individual high-quality assets. It combines cutting-edge AI detection with precise manual layout tools to streamline your creative workflow.
 
-![Image Slicer Interface Overview](screenshot_1.png)
+![Image Slicer Interface Overview](./assets/screenshot_1.png)
 
 ## 🚀 Key Features
 
@@ -19,7 +19,7 @@
 3.  **Refine**: Adjust offsets, gaps, or manually tweak the bounding boxes.
 4.  **Extract**: Preview your slices and export them as high-quality individual files.
 
-![Slicing Process Example](screenshot_2.png)
+![Slicing Process Example](./assets/screenshot_2.png)
 
 ## 🎨 Tech Stack
 
