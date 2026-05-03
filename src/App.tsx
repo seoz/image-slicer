@@ -363,7 +363,7 @@ export default function App() {
             <Scissors className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">EmoteSplitter</h1>
+            <h1 className="text-xl font-bold tracking-tighter bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">Image Slicer</h1>
             <p className="text-xs text-white/40 uppercase tracking-widest font-medium">Smart Image Slicing</p>
           </div>
         </div>
@@ -391,7 +391,7 @@ export default function App() {
 
       <main className="flex h-[calc(100vh-88px)] overflow-hidden">
         {/* Left Sidebar - Controls */}
-        <aside className="w-80 border-r border-white/10 p-6 overflow-y-auto bg-[#080808]/50 custom-scrollbar">
+        <aside className="w-80 border-r border-white/10 p-6 overflow-y-auto bg-[#080808]/50 custom-scrollbar flex flex-col">
           {!image ? (
             <div className="h-full flex flex-col justify-center text-center opacity-50 space-y-4">
               <Upload className="w-12 h-12 mx-auto" />
@@ -484,6 +484,12 @@ export default function App() {
               </div>
             </div>
           )}
+          
+          <div className="mt-auto pt-8 pb-2 text-center">
+            <p className="text-[10px] text-white/20 uppercase tracking-[0.2em] font-medium">
+              made by <span className="text-white/40">Daniel Seo</span>
+            </p>
+          </div>
         </aside>
 
         {/* Center - Preview */}
@@ -582,7 +588,9 @@ export default function App() {
                               animationDelay: !dragState ? `${i * 0.05}s` : '0s'
                             }}
                           >
-                            <span className="text-[10px] font-mono text-cyan-300 font-bold opacity-0 group-hover:opacity-100 pointer-events-none select-none">{i+1}</span>
+                            <div className="flex flex-col items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none select-none">
+                              <span className="text-[10px] font-mono text-cyan-300 font-bold whitespace-nowrap bg-black/40 px-1 rounded">{box.label || i+1}</span>
+                            </div>
                             
                             {/* Delete Button */}
                             <button 

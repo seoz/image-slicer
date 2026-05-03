@@ -1,6 +1,6 @@
 {
-  "name": "EmoteSplitter",
-  "description": "An AI-powered utility to automatically slice emoticon grids and sprite sheets into individual high-quality files.",
+  "name": "Image Slicer",
+  "description": "This application is a professional emoticon and sprite sheet slicer that combines AI-driven auto-detection with precise manual grid controls and custom \"drag-and-crop\" boxes to effortlessly extract individual icons into downloadable high-quality assets.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
